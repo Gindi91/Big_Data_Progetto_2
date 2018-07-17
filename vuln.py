@@ -1,7 +1,7 @@
 import sys
 from pyspark import SparkContext, SparkConf
 
-conf=SparkConf().setAppName("Prova")
+conf=SparkConf().setAppName("Controllo delle vulnerabilità")
 sc=SparkContext(conf=conf)
 text_file=sc.textFile("hdfs://localhost:9000/user/gindi/input/file_rou_20180311_mini.txt")
 
