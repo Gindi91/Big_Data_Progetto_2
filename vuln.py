@@ -22,11 +22,20 @@ def is_valid(line):
 #Configurazione iniziale spark
 conf=SparkConf().setAppName("Controllo delle vulnerabilita")
 sc=SparkContext(conf=conf)
+text_file=sc.textFile("hdfs://localhost:9000/user/gindi/input/file_rou_20180311_mini.txt").map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
 
-#Calcolo e rappresentazione risultato
-result=sc.textFile("hdfs://localhost:9000/user/gindi/input/file_rou_20180311_mini.txt").map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1).map(lambda line: (count_reps(line),1)).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[0], False).collect()
+#Calcolo del numero di contatori per livello di vulnerabilita
+vuln=text_file.map(lambda line: (count_reps(line),1)).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[0], False).collect()
 
+#Calcolo della vulnerabilita totale media del sistema
+vuln_map=text_file.map(lambda line: (1, count_reps(line))).values()
+mean_vuln=float(vuln_map.sum())/float(vuln_map.count())
 
+#Rappresentazione dei risultati
 print "=========================="
-print result
+print "Vulnerabilita totale media del sistema"
+print mean_vuln
+print "=========================="
+for record in vuln:
+	print record
 print "=========================="
