@@ -22,15 +22,16 @@ def impact(line):
 #Configurazione iniziale spark
 conf=SparkConf().setAppName("Misurazione dell'impatto")
 sc=SparkContext(conf=conf)
-text_file=sc.textFile("hdfs://localhost:9000/user/gindi/input/file_rou_20180311_mini.txt")
+text_file=sc.textFile("hdfs://localhost:9000/user/gindi/input/file_rou_20180311_mini.txt").map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
 
 #Calcolo dell'impatto totale dei vari contatori
-impact_list=text_file.map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1).map(lambda line: (line[2], impact(line))).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[1], False).collect()
+impact_list=text_file.map(lambda line: (line[2], impact(line))).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[1], False).collect()
 
 #Calcolo della media d'impatto nell'intera rete
-mean_map=text_file.map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1).map(lambda line: (1, impact(line))).values()
+mean_map=text_file.map(lambda line: (1, impact(line))).values()
 mean=float(mean_map.sum())/float(mean_map.count())
 
+#Rappresentazione dei risultati
 print "=========================="
 print "Media totale d'impatto nella rete"
 print mean
