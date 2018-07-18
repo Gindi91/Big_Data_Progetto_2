@@ -33,7 +33,7 @@ fileRisultato = "hdfs://localhost:9000/user/gindi/output/imp_" + today + ".txt"
 #Configurazione iniziale spark
 conf=SparkConf().setAppName("Misurazione dell'impatto")
 sc=SparkContext(conf=conf)
-text_file=sc.textFile(pathFile).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
+text_file=sc.textFile(pathFile).map(lambda line: line.split(";")).filter(lambda line: line[2]!="RIPETITORE1").filter(lambda line: is_valid(line)==1)
 
 #Calcolo dell'impatto totale dei vari contatori
 imp=text_file.map(lambda line: (line[2], impact(line))).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[1], False)
