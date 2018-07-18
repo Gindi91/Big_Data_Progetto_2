@@ -2,7 +2,6 @@ import sys
 import time
 from pyspark import SparkContext, SparkConf
 
-
 #Funzione per ricavare il numero di ripetitori per ciascun contatore
 def count_reps(line):
 	return len(line)
@@ -22,7 +21,7 @@ fileRisultato = "hdfs://localhost:9000/hduser/output/vuln_" + today
 conf=SparkConf().setAppName("Controllo delle vulnerabilita")
 sc=SparkContext(conf=conf)
 
-#Caricamento di tutti i file ROU in un singolo RDD
+#Unione dei files in input
 rdd = sc.textFile("file:///usr/local/spark/input/ROU/*.CFG")
 text_file=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
 
