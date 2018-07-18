@@ -11,14 +11,14 @@ def is_valid(line):
 
 #Funzione che estrae il valore numerico
 def ex_num(line):
-	return double(line[1][:-2])
+	return float(line[1][:-2])
 
 #Funzione che associa una fascia per ogni valore
 def statistics(num):
 	if num<86:
 		return 85
-	else return int(num)
-	
+	else:
+		return int(num)
 
 #Nome del file di output
 today = time.strftime("%Y%m%d-%H%M%S")
@@ -26,15 +26,16 @@ today = time.strftime("%Y%m%d-%H%M%S")
 fileRisultato = "hdfs://localhost:9000/user/gindi/output/stats_" + today
 
 #Configurazione iniziale spark
-conf=SparkConf().setAppName("")
+conf=SparkConf().setAppName("Analisi statistiche")
 sc=SparkContext(conf=conf)
 
 #Unione dei files in input
-rdd=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/COM/*.txt")
-#rdd = sc.textFile("file:///usr/local/spark/input/COM/*.txt")
+rdd=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/COM/*.TXT")
+#rdd = sc.textFile("file:///usr/local/spark/input/COM/*.TXT")
 text_file=rdd.coalesce(1).map(lambda line: line.split("(")).filter(lambda line: is_valid(line)==1)
 
-stats_map=text_file.map(lambda line: (statistics(ex_num(line)),1))
+#Creazione dell'output in rdd
+stats_map=text_file.map(lambda line: (statistics(ex_num(line)),1)).reduceByKey(lambda x,y:x+y).sortBy(lambda x: x[0], False)
 
-	
-
+#Creazione del file di output
+output=stats_map.saveAsTextFile(fileRisultato)
