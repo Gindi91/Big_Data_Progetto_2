@@ -32,7 +32,7 @@ fileRisultato = "hdfs://localhost:9000/hduser/output/vuln_" + today + ".txt"
 #Configurazione iniziale spark
 conf=SparkConf().setAppName("Controllo delle vulnerabilita")
 sc=SparkContext(conf=conf)
-text_file=sc.textFile(pathFile).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
+text_file=sc.textFile(pathFile).map(lambda line: line.split(";")).filter(lambda line: line[2]!="RIPETITORE1").filter(lambda line: is_valid(line)==1)
 
 #Calcolo del numero di contatori per livello di vulnerabilita
 vuln=text_file.map(lambda line: (count_reps(line),1)).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[0], False)
