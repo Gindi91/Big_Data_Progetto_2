@@ -24,6 +24,7 @@ sc=SparkContext(conf=conf)
 
 #Unione dei files in input
 rdd=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/ROU/*.CFG")
+#rdd = sc.textFile("file:///usr/local/spark/input/ROU/*.CFG")
 text_file=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
 
 #Calcolo dell'impatto totale dei vari contatori
