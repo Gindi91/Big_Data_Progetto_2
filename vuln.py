@@ -1,5 +1,11 @@
 import sys
+import time
 from pyspark import SparkContext, SparkConf
+
+#Parametro inserito da riga di comando, contiene il nome del file da elaborare.
+FileInput =  sys.argv[1]
+# pathFile = "hdfs://localhost:9000/user/gindi/input/" + FileInput
+pathFile = "hdfs://localhost:9000/hduser/input/" + FileInput
 
 #Funzione per ricavare il numero di ripetitori per ciascun contatore
 def count_reps(line):
@@ -19,13 +25,17 @@ def is_valid(line):
 	else:
 		return -1
 
+#Nome del file di output
+today = time.strftime("%Y%m%d-%H%M%S")
+fileRisultato = "hdfs://localhost:9000/hduser/output/vuln_" + today + ".txt"	
+	
 #Configurazione iniziale spark
 conf=SparkConf().setAppName("Controllo delle vulnerabilita")
 sc=SparkContext(conf=conf)
-text_file=sc.textFile("hdfs://localhost:9000/user/gindi/input/file_rou_20180311_mini.txt").map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
+text_file=sc.textFile(pathFile).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
 
 #Calcolo del numero di contatori per livello di vulnerabilita
-vuln=text_file.map(lambda line: (count_reps(line),1)).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[0], False).collect()
+vuln=text_file.map(lambda line: (count_reps(line),1)).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[0], False).saveAsTextFile(fileRisultato)
 
 #Calcolo della vulnerabilita totale media del sistema
 vuln_map=text_file.map(lambda line: (1, count_reps(line))).values()
