@@ -16,7 +16,7 @@ def impact(line):
 #Nome del file di output
 today = time.strftime("%Y%m%d-%H%M%S")
 #fileRisultato = "hdfs://localhost:9000/hduser/output/imp_" + today + ".txt"	
-fileRisultato = "hdfs://localhost:9000/user/gindi/output/imp_" + today + ".txt"
+fileRisultato = "hdfs://localhost:9000/user/gindi/output/imp_" + today
 
 #Configurazione iniziale spark
 conf=SparkConf().setAppName("Misurazione dell'impatto")
@@ -24,7 +24,7 @@ sc=SparkContext(conf=conf)
 
 #Unione dei files in input
 rdd=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/ROU/*.CFG")
-text_file=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: line[0]!="RIPETITORE1").filter(lambda line: is_valid(line)==1)
+text_file=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
 
 #Calcolo dell'impatto totale dei vari contatori
 imp=text_file.map(lambda line: (line[0], impact(line))).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[1], False)
