@@ -15,7 +15,8 @@ def is_valid(line):
 
 #Nome del file di output
 today = time.strftime("%Y%m%d-%H%M%S")
-fileRisultato = "hdfs://localhost:9000/hduser/output/vuln_" + today	
+#fileRisultato = "hdfs://localhost:9000/hduser/output/vuln_" + today
+fileRisultato = "hdfs://localhost:9000/user/gindi/output/vuln_" + today	
 	
 #Configurazione iniziale spark
 conf=SparkConf().setAppName("Controllo delle vulnerabilita")
