@@ -4,10 +4,11 @@ from pyspark import SparkContext, SparkConf
 
 #Controllo di validita del record rappresentato da line
 def is_valid(line):
-	if '/' not in line[0] and '"' not in line[0]:
-		return 1
-	else:
-		return -1
+	val=1
+	for i in range(0, len(line)):
+		if len(line[i])!=13:
+			val=-1
+	return val
 
 #Funzione per il calcolo dell'impatto del singolo contatore in un record
 def impact(line):
