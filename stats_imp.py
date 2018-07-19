@@ -38,10 +38,12 @@ conf=SparkConf().setAppName("")
 sc=SparkContext(conf=conf)
 
 #Unione dei files in input
-rdd_imp=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/ROU/*.CFG")
+#rdd_imp=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/20180128/*/*/*/*/ROU?????.CFG")
+rdd_imp=sc.textFile("file:///usr/local/spark/input/20180128/*/*/*/*/ROU?????.CFG")
 text_file_imp=rdd_imp.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid_imp(line)==1)
 
-rdd_stats=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/COM/*.NEW")
+#rdd_stats=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/20180128/*/*/*/*/COM?????.NEW")
+rdd_stats=sc.textFile("file:///usr/local/spark/input/20180128/*/*/*/*/COM?????.NEW")
 text_file_stats=rdd_stats.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid_stats(line)==1)
 
 #Calcolo dell'impatto totale per ogni contatore
