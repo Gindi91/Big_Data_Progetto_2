@@ -19,8 +19,8 @@ conf=SparkConf().setAppName("Elaborazione dati anagrafici")
 sc=SparkContext(conf=conf)
 
 #Unione dei files in input
-rdd=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/*/*/*/*/ADD?????.CFG")
-#rdd = sc.textFile("file:///usr/local/spark/input/*/*/*/*/ADD?????.CFG")
+rdd=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/20180128/*/*/*/*/ADD?????.CFG")
+#rdd = sc.textFile("file:///usr/local/spark/input/20180128/*/*/*/*/ADD?????.CFG")
 text_file=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
 
 #Calcolo del numero di contatori per fase
