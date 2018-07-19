@@ -56,5 +56,5 @@ stats=text_file_stats.map(lambda line: (line[0], int(line[3]))).sortBy(lambda x:
 stats_imp_join=stats.join(imp).coalesce(1).values().map(lambda x: x[0]*x[1])
 stats_imp_norm=float(stats_imp_join.sum())/float(stats_imp_join.count())
 
-output = sc.parallelize(["Prodotto normalizzato tra statistica ed impatto della rete", vuln_imp_norm]).saveAsTextFile(fileRisultato)
+output = sc.parallelize(["Prodotto normalizzato tra statistica ed impatto della rete", stats_imp_norm]).saveAsTextFile(fileRisultato)
 
