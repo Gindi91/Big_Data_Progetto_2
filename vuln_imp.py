@@ -38,7 +38,8 @@ vuln=text_file.map(lambda line: (line[0], count_reps(line))).reduceByKey(lambda 
 #Calcolo dell'impatto totale per ogni contatore
 imp=text_file.map(lambda line: (line[0], impact(line))).reduceByKey(lambda x,y: x+y).sortBy(lambda x: x[1], False)
 
-vuln_imp_join=vuln.join(imp, vuln[0]==imp[0]).map(lambda x,y,z: (x,y*z)).values()
+#Calcolo del prodotto normalizzato
+vuln_imp_join=vuln.join(imp).coalesce(1).values().map(lambda x: x[0]*x[1])
 vuln_imp_norm=float(vuln_imp_join.sum())/float(vuln_imp_join.count())
 
-output = vuln_imp_norm.saveAsTextFile(fileRisultato)
+output = sc.parallelize(["Prodotto normalizzato tra vulnerabilita ed impatto della rete", vuln_imp_norm]).saveAsTextFile(fileRisultato)
