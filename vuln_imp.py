@@ -20,16 +20,16 @@ def is_valid(line):
 	
 #Nome del file di output
 today = time.strftime("%Y%m%d-%H%M%S")
-#fileRisultato = "hdfs://localhost:9000/hduser/output/imp_vuln_" + today
-fileRisultato = "hdfs://localhost:9000/user/gindi/output/imp_vuln_" + today	
+fileRisultato = "hdfs://localhost:9000/hduser/output/imp_vuln_" + today
+#fileRisultato = "hdfs://localhost:9000/user/gindi/output/imp_vuln_" + today	
 
 #Configurazione iniziale spark
 conf=SparkConf().setAppName("")
 sc=SparkContext(conf=conf)
 
 #Unione dei files in input
-rdd=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/ROU/*.CFG")
-#rdd = sc.textFile("file:///usr/local/spark/input/ROU/*.CFG")
+#rdd=sc.textFile("file:///home/gindi/spark-2.3.0-bin-hadoop2.7/bin/jars/Input/20180128/*/*/*/*/ROU?????.CFG")
+rdd = sc.textFile("file:///usr/local/spark/input/20180128/*/*/*/*/ROU?????.CFG")
 text_file=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==1)
 
 #Calcolo della vulnerabilita per ogni contatore
