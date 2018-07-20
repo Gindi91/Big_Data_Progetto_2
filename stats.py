@@ -4,7 +4,7 @@ from pyspark import SparkContext, SparkConf
 
 #Controllo di validita del record rappresentato da line
 def is_valid(line):
-	if len(line)==2:
+	if len(line)==2 and (len(line[1])==7 or len(line[1])==8):
 		return 1
 	else:
 		return -1
