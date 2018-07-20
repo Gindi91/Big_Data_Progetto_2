@@ -4,7 +4,7 @@ from pyspark import SparkContext, SparkConf
 
 #Controllo di validita per i campi stats
 def is_valid_stats(line):
-	if len(line[0])==13 and len(line)==4 :
+	if len(line[0])==13 and len(line)==4 and len(line[3])==3:
 		return 1
 	else:
 		return -1
