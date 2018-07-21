@@ -21,20 +21,13 @@ def is_valid_imp(line):
 def impact(line):
 	return len(line)-1
 
-#Funzione che associa una fascia per ogni valore
-def statistics(num):
-	if int(num)<86:
-		return 85
-	else:
-		return int(num)
-
 #Nome del file di output
 today = time.strftime("%Y%m%d-%H%M%S")
 #fileRisultato = "hdfs://localhost:9000/hduser/output/stats_new_" + today
 fileRisultato = "hdfs://localhost:9000/user/gindi/output/stats_imp_" + today
 
 #Configurazione iniziale spark
-conf=SparkConf().setAppName("")
+conf=SparkConf().setAppName("Calcolo statistica*impatto")
 sc=SparkContext(conf=conf)
 
 #Unione dei files in input
