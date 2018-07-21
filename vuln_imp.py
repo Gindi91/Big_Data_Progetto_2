@@ -24,7 +24,7 @@ fileRisultato = "hdfs://localhost:9000/hduser/output/imp_vuln_" + today
 #fileRisultato = "hdfs://localhost:9000/user/gindi/output/imp_vuln_" + today	
 
 #Configurazione iniziale spark
-conf=SparkConf().setAppName("")
+conf=SparkConf().setAppName("Calcolo vulnerabilita*impatto")
 sc=SparkContext(conf=conf)
 
 #Unione dei files in input
