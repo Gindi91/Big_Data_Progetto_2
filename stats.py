@@ -37,5 +37,8 @@ text_file=rdd.coalesce(1).map(lambda line: line.split("(")).filter(lambda line: 
 #Creazione dell'output in rdd
 stats_map=text_file.map(lambda line: (statistics(ex_num(line)),1)).reduceByKey(lambda x,y:x+y).sortBy(lambda x: x[0], False)
 
+#Creazione del log dei record non validi
+not_valid=rdd.coalesce(1).map(lambda line: line.split("(")).filter(lambda line: is_valid(line)==-1)
+
 #Creazione del file di output
-output=stats_map.saveAsTextFile(fileRisultato)
+output = sc.union([stats_map,not_valid]).saveAsTextFile(fileRisultato)
