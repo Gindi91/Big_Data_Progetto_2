@@ -35,5 +35,8 @@ vuln=text_file.map(lambda line: (count_reps(line),1)).reduceByKey(lambda x,y: x+
 vuln_map=text_file.map(lambda line: (1, count_reps(line))).values()
 mean_vuln=sc.parallelize(["Vulnerabilita totale media del sistema:",float(vuln_map.sum())/float(vuln_map.count())])
 
+#Creazione del log dei record non validi
+not_valid=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==-1)
+
 #Unione dei due risultati parziali e scrittura dei file su HDFS
-output = sc.union([mean_vuln,vuln]).saveAsTextFile(fileRisultato)
+output = sc.union([mean_vuln,vuln,not_valid]).saveAsTextFile(fileRisultato)
