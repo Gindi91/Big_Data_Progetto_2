@@ -26,5 +26,8 @@ text_file=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: 
 #Calcolo del numero di contatori per fase
 phase_map=text_file.map(lambda line: (line[3],1)).reduceByKey(lambda x,y: x+y)
 
+#Creazione del log dei record non validi
+not_valid=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==-1)
+
 #Creazione del file di output
-output=phase_map.saveAsTextFile(fileRisultato)
+output=sc.union([phase_map,not_valid]).saveAsTextFile(fileRisultato)
