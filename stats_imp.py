@@ -55,4 +55,11 @@ stats=text_file_stats.map(lambda line: (get_contatore(line), ex_num(line))).sort
 stats_imp_join=stats.join(imp).coalesce(1).values().map(lambda x: x[0]*x[1])
 stats_imp_norm=float(stats_imp_join.sum())/float(stats_imp_join.count())
 
-output = sc.parallelize(["Prodotto normalizzato tra statistica ed impatto della rete", stats_imp_norm]).saveAsTextFile(fileRisultato)
+#Creazione del log dei record non validi
+not_valid_imp=rdd_imp.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid_imp(line)==-1)
+sc.parallelize(["Record non validi in ROU", not_valid_imp]
+
+not_valid_stats=rdd_stats.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid_stats(line)==-1)
+sc.parallelize(["Record non validi in COM", not_valid_imp]
+
+output = sc.union([sc.parallelize(["Prodotto normalizzato tra statistica ed impatto della rete", stats_imp_norm]),not_valid_imp,not_valid_stats]).saveAsTextFile(fileRisultato)
