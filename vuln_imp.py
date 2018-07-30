@@ -45,4 +45,4 @@ vuln_imp_norm=float(vuln_imp_join.sum())/float(vuln_imp_join.count())
 #Creazione del log dei record non validi
 not_valid=rdd_imp.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==-1)
 
-output = sc.union([sc.parallelize(["Prodotto normalizzato tra statistica ed impatto della rete", vuln_imp_norm]),not_valid]).saveAsTextFile(fileRisultato)
+output = sc.union([sc.parallelize(["Prodotto normalizzato tra vulnerabilita ed impatto della rete", vuln_imp_norm]),not_valid]).saveAsTextFile(fileRisultato)
