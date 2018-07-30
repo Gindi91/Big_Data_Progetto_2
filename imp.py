@@ -35,5 +35,8 @@ imp=text_file.map(lambda line: (line[0], impact(line))).reduceByKey(lambda x,y: 
 mean_map=text_file.map(lambda line: (1, impact(line))).values()
 mean_imp=sc.parallelize(["Media totale d'impatto nella rete",float(mean_map.sum())/float(mean_map.count())])
 
-#Unione dei due risultati parziali e scrittura dei file su HDFS
-output = sc.union([mean_imp,imp]).saveAsTextFile(fileRisultato)
+#Creazione del log dei record non validi
+not_valid=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==-1)
+
+#Unione dei risultati parziali e scrittura dei file su HDFS
+output = sc.union([mean_imp,imp,not_valid]).saveAsTextFile(fileRisultato)
