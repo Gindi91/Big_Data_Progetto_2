@@ -42,4 +42,7 @@ imp=text_file.map(lambda line: (line[0], impact(line))).reduceByKey(lambda x,y: 
 vuln_imp_join=vuln.join(imp).coalesce(1).values().map(lambda x: x[0]*x[1])
 vuln_imp_norm=float(vuln_imp_join.sum())/float(vuln_imp_join.count())
 
-output = sc.parallelize(["Prodotto normalizzato tra vulnerabilita ed impatto della rete", vuln_imp_norm]).saveAsTextFile(fileRisultato)
+#Creazione del log dei record non validi
+not_valid=rdd_imp.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==-1)
+
+output = sc.union([sc.parallelize(["Prodotto normalizzato tra statistica ed impatto della rete", vuln_imp_norm]),not_valid]).saveAsTextFile(fileRisultato)
