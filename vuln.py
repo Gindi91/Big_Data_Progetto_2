@@ -38,5 +38,5 @@ mean_vuln=sc.parallelize(["Vulnerabilita totale media del sistema:",float(vuln_m
 #Creazione del log dei record non validi
 not_valid=rdd.coalesce(1).map(lambda line: line.split(";")).filter(lambda line: is_valid(line)==-1)
 
-#Unione dei due risultati parziali e scrittura dei file su HDFS
+#Unione dei risultati parziali e scrittura dei file su HDFS
 output = sc.union([mean_vuln,vuln,not_valid]).saveAsTextFile(fileRisultato)
